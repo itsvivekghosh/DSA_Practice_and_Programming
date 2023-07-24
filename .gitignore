@@ -30,3 +30,9 @@
 *.exe
 *.out
 *.app
+
+# Input & Output Files Ignore
+input.txt
+output.txt
+error.txt
+
