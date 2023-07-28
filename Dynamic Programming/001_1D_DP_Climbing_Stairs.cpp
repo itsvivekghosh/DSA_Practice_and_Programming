@@ -2,10 +2,11 @@
 using namespace std;
 
 #define gc getchar_unlocked
-#define fo(i, n) for (int i = 0; i < n; i++)
+#define fo(i, n) for (i = 0; i < n; i++)
 #define Fo(i, k, n) for (i = k; k < n ? i < n : i > n; k < n ? i += 1 : i -= 1)
-#define ll long long
-#define deb(x) cout << #x << "=" << x << endl
+#define ll long long int
+#define int long long int
+#define deb(x) cout << x << endl
 #define pb push_back
 #define mp make_pair
 #define F first
@@ -15,107 +16,92 @@ using namespace std;
 #define sortall(x) sort(all(x))
 #define tr(it, a) for (auto it = a.begin(); it != a.end(); it++)
 #define PI 3.1415926535897932384626
-#define MOD 1000000007
-#define MAXX LLONG_MAX
-#define endl '\n'
-#define int long long int
+#define mod 1000000007
 typedef pair<int, int> pii;
-typedef pair<ll, ll> pl;
+typedef pair<int, int> pl;
 typedef vector<int> vi;
-typedef vector<ll> vl;
+typedef vector<int> vl;
 typedef vector<pii> vpii;
 typedef vector<pl> vpl;
 typedef vector<vi> vvi;
 typedef vector<vl> vvl;
-typedef vector<string> vs;
-typedef vector<vs> vss;
 
 
-// User function Template for C++
-class Solution {
-    
-    public:
-        int max_product_of_edges_in_path(int n, vector<vector<int>> &edges) {
-            
-            int m = edges.size();
+int solve1(int ind) {
 
-            vector<pair<int, int>> adj[n+1];
-            for (int i=0;i<edges.size();++i) {
-                adj[edges[i][0]].push_back( { edges[i][1], edges[i][2] } );
-            }
+    if (ind == 0) return 1;
+    if (ind == 1) return 1;
 
-            priority_queue<pair<int, int>, vector<pii>, greater<pii> > pq;
-            pq.push({1, 1});
+    return solve1(ind-1) + solve1(ind-2);
+}
 
-            vector<int> dist(n+1, -1);
-            dist[0] = dist[1] = 1;
 
-            while (!pq.empty()) {
+int solve2(int n, vector<int> &dp) {
 
-                pair<int, int> data = pq.top();
-                pq.pop();
+    if(n == 0 || n == 1) return 1;
+    if(dp[n] != -1) return dp[n];
 
-                int mul = data.first;
-                int node = data.second;
-                if (dist[node] > mul) {
-                    continue;
-                }
+    return dp[n] = (solve2(n-1, dp) + solve2(n-2, dp)) % mod;
+}
 
-                for (auto it : adj[node]) {
+int solve3(int n) {
 
-                    int nextNode = it.first;
-                    int nextDistance = it.second;
-
-                    if (nextDistance * mul > dist[nextNode]) {
-                        dist[nextNode] = nextDistance * mul;
-                        pq.push( { dist[nextNode], nextNode } );
-                    }
-                }
-            }
-
-            return dist[n];
-
-        }
-};
-
-void call() {
-
-    int n = 5, m = 5;
-    cin>>n>>m;
-    vector<vector<int>> edges;
-    
-    for (int i=0;i<m;++i) {
-        int a,b,c;
-        cin >> a >> b >> c;
-        edges.push_back({ a, b, c });
+    int prev2 = 1;
+    int prev = 1;
+  
+    for(int i=2; i<=n; i++){
+        int cur_i = prev2+ prev;
+        prev2 = prev;
+        prev= cur_i;
     }
- 
-    // Function call
-    cout << Solution().max_product_of_edges_in_path(n, edges) << endl;
-    return ;
+
+    return prev;
+}
+
+int findNumberOfStairs(int n) {
+
+    // return solve1(n);
+    
+    // vi dp(n+1, -1);
+    // return solve2(n, dp);
+
+    return solve3(n);
+}
+
+void __call_func__() {
+    
+    int n = 0;
+    cin >> n;
+
+    deb(findNumberOfStairs(n));
+
 }
 
 int32_t main() {
-    void sync_files_and_os();
-    sync_files_and_os();
+
+    void __init_files_and_inputs__();
+    __init_files_and_inputs__();
+
     int t=1;
+    // for the number of test cases
     cin >> t;
+
     while (t--) {
-        call();
+        __call_func__();
     }
+
     return 0;
 }
 
-void sync_files_and_os() {
+void __init_files_and_inputs__() {
+
+    #ifndef ONLINE_JUDGE
+        freopen("../input.txt", "r", stdin);
+        freopen("../output.txt", "w", stdout);
+    #endif
+
     ios_base::sync_with_stdio(0);
     cin.tie(0);
     cout.tie(0);
 
-    #ifndef ONLINE_JUDGE
-        freopen("../input.txt", "r", stdin);
-        freopen("../error.txt", "w", stderr);
-        freopen("../output.txt", "w", stdout);
-    #endif
 }
-
-
